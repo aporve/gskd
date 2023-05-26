@@ -341,8 +341,66 @@ function showSkuLevelDetailsBrand(data, currentSku, requestType, requestSku) {
         let filteredData = currentAvailableOrders.filter((order, index) => order["sku"] === currentElementData)
         let orderData = filteredData[0];
 
-        window.wholesalerAccountData.push({...orderData, "_id": uuid, "brandsku": `${orderData["sku"]}-${filteredBrand[0]["sku"]}`});
-        addWholeSalerAccordionSku(updatedData, {...orderData, "_id": uuid, "brandsku": `${orderData["sku"]}-${filteredBrand[0]["sku"]}`}, currentSku);
+        console.log("first -- ", window.wholesalerAccountData);
+
+        let testtemp = [];
+        window.wholesalerAccountData && window.wholesalerAccountData.length > 0 && window.wholesalerAccountData.map(whdata => {
+            if(whdata["ordered_date"]) {
+                testtemp.push(new Date(whdata["ordered_date"]).toLocaleDateString());
+            }
+        });
+
+        const getLocalDataForDate = getParsedData();
+        const startDate = new Date();
+        const endDate = getLocalDataForDate['last_date'];
+        const minDate = `${getMonthName( new Date(startDate))} ${new Date(startDate).getDate()}, ${String(new Date(startDate).getFullYear()).substring(2)}`;
+        const maxDate = `${getMonthName( new Date(endDate))} ${new Date(endDate).getDate()}, ${String(new Date(endDate).getFullYear()).substring(2)}`;
+        console.log("min Date ", minDate);
+        console.log("min Date ", maxDate);
+        Date.prototype.addDays = function(days) {
+            var dat = new Date(this.valueOf())
+            dat.setDate(dat.getDate() + days);
+            return dat;
+        }
+     
+        function getDates(startDate, stopDate) {
+           var dateArray = new Array();
+           var currentDate = startDate;
+           while (currentDate <= stopDate) {
+             dateArray.push(new Date(currentDate).toLocaleDateString())
+             currentDate = currentDate.addDays(1);
+           }
+           return dateArray;
+         }
+     
+        var dateArray = getDates(new Date(minDate),  new Date(maxDate));
+        console.log(dateArray);
+         console.log(testtemp);
+        testtemp.forEach((el, i) => {
+            console.log("i i ", i , " " , el);
+            console.log(dateArray);
+            console.log(dateArray.includes(el));
+            if(dateArray.includes(el)) {
+                var index = dateArray.indexOf(el);
+                console.log(index);
+                if (index !== -1) {
+                    dateArray.splice(index, 1);
+                }
+            }
+        });
+
+        console.log("update", dateArray);
+        let selected = dateArray[0];
+        console.log(selected);
+        let splitSelected = selected.split("/");
+        console.log(splitSelected);
+        let convertedSelected = new Date(splitSelected[2], splitSelected[1] - 1, splitSelected[0]);
+        console.log(convertedSelected)
+        let pickedDate = `${getMonthName( new Date(convertedSelected))} ${new Date(convertedSelected).getDate()}, ${String(new Date(convertedSelected).getFullYear()).substring(2)}`
+        console.log("pickedDate -- ", pickedDate);
+
+        window.wholesalerAccountData.push({...orderData, "_id": uuid, "brandsku": `${orderData["sku"]}-${filteredBrand[0]["sku"]}`, "ordered_date": pickedDate});
+        addWholeSalerAccordionSku(updatedData, {...orderData, "_id": uuid, "brandsku": `${orderData["sku"]}-${filteredBrand[0]["sku"]}`, "ordered_date": pickedDate}, currentSku);
         // let currentElementData = $(this).attr("skudata");
         // let updatedData = Object.keys(window.dataStore).length !== 0 ? JSON.parse(JSON.stringify(window.dataStore)) : JSON.parse(JSON.stringify(data));
         // let currentAvailableOrders = Object.keys(window.dataStore).length !== 0 ? window.dataStore["available_orders"]["orders"] : data["available_orders"]["orders"];
@@ -420,8 +478,8 @@ function showSkuLevelDetailsBrand(data, currentSku, requestType, requestSku) {
         if(!window.orderCartData.includes(filteredBrand[0]["sku"])) {
             window.orderCartData.push(filteredBrand[0]["sku"]);
         }
-        window.wholesalerAccountData.push({...orderData, "_id": uuid, "brandsku": `${orderData["sku"]}-${filteredBrand[0]["sku"]}`});
-        addWholeSalerAccordionSku (data, {...orderData, "_id": uuid, "brandsku": `${orderData["sku"]}-${filteredBrand[0]["sku"]}`}, currentSku);
+        window.wholesalerAccountData.push({...orderData, "_id": uuid, "brandsku": `${orderData["sku"]}-${filteredBrand[0]["sku"]}`, "ordered_date": `${getMonthName( new Date())} ${new Date().getDate()}, ${String(new Date().getFullYear()).substring(2)}`});
+        addWholeSalerAccordionSku (data, {...orderData, "_id": uuid, "brandsku": `${orderData["sku"]}-${filteredBrand[0]["sku"]}`, "ordered_date": `${getMonthName( new Date())} ${new Date().getDate()}, ${String(new Date().getFullYear()).substring(2)}`}, currentSku);
     } else {
         let orderData = data["available_orders"]["orders"][0];
         if(requestType === "swap") {
@@ -430,8 +488,8 @@ function showSkuLevelDetailsBrand(data, currentSku, requestType, requestSku) {
         }
         if(!window.orderCartData.includes(filteredBrand[0]["sku"]) ) {
             window.orderCartData.push(filteredBrand[0]["sku"]);
-            window.wholesalerAccountData.push({...orderData, "_id": uuid, "brandsku": `${orderData["sku"]}-${filteredBrand[0]["sku"]}`});
-            addWholeSalerAccordionSku(data, { ...orderData, "_id": uuid, "brandsku": `${orderData["sku"]}-${filteredBrand[0]["sku"]}` }, currentSku);
+            window.wholesalerAccountData.push({...orderData, "_id": uuid, "brandsku": `${orderData["sku"]}-${filteredBrand[0]["sku"]}`, "ordered_date": `${getMonthName( new Date())} ${new Date().getDate()}, ${String(new Date().getFullYear()).substring(2)}`});
+            addWholeSalerAccordionSku(data, { ...orderData, "_id": uuid, "brandsku": `${orderData["sku"]}-${filteredBrand[0]["sku"]}`, "ordered_date": `${getMonthName( new Date())} ${new Date().getDate()}, ${String(new Date().getFullYear()).substring(2)}` }, currentSku);
         } else {
             let getIds = window.dataStore["new_orders"]["orders"].map(nwo => nwo["_id"]);
             if(requestType === "from-checkout") {
@@ -782,8 +840,65 @@ function showBrandLevelDetails(data, currentSku, requestType, requestSku) {
         let filteredData = currentAvailableOrders.filter((order, index) => order["sku"] === currentElementData)
         let orderData = filteredData[0];
 
-        window.wholesalerAccountData.push({...orderData, "_id": uuid, "brandsku": `${orderData["sku"]}-${filteredBrand[0]["sku"]}`});
-        addWholeSalerAccordion(updatedData, {...orderData, "_id": uuid, "brandsku": `${orderData["sku"]}-${filteredBrand[0]["sku"]}`}, currentSku);
+        console.log("first -- ", window.wholesalerAccountData);
+
+        let testtemp = [];
+        window.wholesalerAccountData && window.wholesalerAccountData.length > 0 && window.wholesalerAccountData.map(whdata => {
+            if(whdata["ordered_date"]) {
+                testtemp.push(new Date(whdata["ordered_date"]).toLocaleDateString());
+            }
+        });
+
+        const getLocalDataForDate = getParsedData();
+        const startDate = new Date();
+        const endDate = getLocalDataForDate['last_date'];
+        const minDate = `${getMonthName( new Date(startDate))} ${new Date(startDate).getDate()}, ${String(new Date(startDate).getFullYear()).substring(2)}`;
+        const maxDate = `${getMonthName( new Date(endDate))} ${new Date(endDate).getDate()}, ${String(new Date(endDate).getFullYear()).substring(2)}`;
+        console.log("min Date ", minDate);
+        console.log("min Date ", maxDate);
+        Date.prototype.addDays = function(days) {
+            var dat = new Date(this.valueOf())
+            dat.setDate(dat.getDate() + days);
+            return dat;
+        }
+     
+        function getDates(startDate, stopDate) {
+           var dateArray = new Array();
+           var currentDate = startDate;
+           while (currentDate <= stopDate) {
+             dateArray.push(new Date(currentDate).toLocaleDateString())
+             currentDate = currentDate.addDays(1);
+           }
+           return dateArray;
+         }
+     
+        var dateArray = getDates(new Date(minDate),  new Date(maxDate));
+        console.log(dateArray);
+         console.log(testtemp);
+        testtemp.forEach((el, i) => {
+            console.log("i i ", i , " " , el);
+            console.log(dateArray);
+            console.log(dateArray.includes(el));
+            if(dateArray.includes(el)) {
+                var index = dateArray.indexOf(el);
+                console.log(index);
+                if (index !== -1) {
+                    dateArray.splice(index, 1);
+                }
+            }
+        });
+
+        console.log("update", dateArray);
+        let selected = dateArray[0];
+        console.log(selected);
+        let splitSelected = selected.split("/");
+        console.log(splitSelected);
+        let convertedSelected = new Date(splitSelected[2], splitSelected[1] - 1, splitSelected[0]);
+        console.log(convertedSelected)
+        let pickedDate = `${getMonthName( new Date(convertedSelected))} ${new Date(convertedSelected).getDate()}, ${String(new Date(convertedSelected).getFullYear()).substring(2)}`
+        console.log("pickedDate -- ", pickedDate);
+        window.wholesalerAccountData.push({...orderData, "_id": uuid, "brandsku": `${orderData["sku"]}-${filteredBrand[0]["sku"]}`, "ordered_date": pickedDate});
+        addWholeSalerAccordion(updatedData, {...orderData, "_id": uuid, "brandsku": `${orderData["sku"]}-${filteredBrand[0]["sku"]}`, "ordered_date": pickedDate}, currentSku);
         // if (window.wholesalerAccountData && window.wholesalerAccountData.length !== 0) {
         //     let shouldWholeSalerAccountAdd = false;
         //     if(!window.orderCartData.includes(filteredBrand[0]["sku"]) ) {
@@ -905,8 +1020,8 @@ function showBrandLevelDetails(data, currentSku, requestType, requestSku) {
         if(!window.orderCartData.includes(filteredBrand[0]["sku"])) {
             window.orderCartData.push(filteredBrand[0]["sku"]);
         }
-        window.wholesalerAccountData.push({...orderData, "_id": uuid, "brandsku": `${orderData["sku"]}-${filteredBrand[0]["sku"]}`});
-        addWholeSalerAccordion(data, {...orderData, "_id": uuid, "brandsku": `${orderData["sku"]}-${filteredBrand[0]["sku"]}`}, currentSku);
+        window.wholesalerAccountData.push({...orderData, "_id": uuid, "brandsku": `${orderData["sku"]}-${filteredBrand[0]["sku"]}`, "ordered_date": `${getMonthName( new Date())} ${new Date().getDate()}, ${String(new Date().getFullYear()).substring(2)}`});
+        addWholeSalerAccordion(data, {...orderData, "_id": uuid, "brandsku": `${orderData["sku"]}-${filteredBrand[0]["sku"]}`, "ordered_date": `${getMonthName( new Date())} ${new Date().getDate()}, ${String(new Date().getFullYear()).substring(2)}`}, currentSku);
     } else {
         let orderData = data["available_orders"]["orders"][0];
         if(requestType === "swap") {
@@ -915,8 +1030,8 @@ function showBrandLevelDetails(data, currentSku, requestType, requestSku) {
         }
         if(!window.orderCartData.includes(filteredBrand[0]["sku"]) ) {
             window.orderCartData.push(filteredBrand[0]["sku"]);
-            window.wholesalerAccountData.push({...orderData, "_id": uuid, "brandsku": `${orderData["sku"]}-${filteredBrand[0]["sku"]}`});
-            addWholeSalerAccordion(data, { ...orderData, "_id": uuid, "brandsku": `${orderData["sku"]}-${filteredBrand[0]["sku"]}` }, currentSku);
+            window.wholesalerAccountData.push({...orderData, "_id": uuid, "brandsku": `${orderData["sku"]}-${filteredBrand[0]["sku"]}`, "ordered_date": `${getMonthName( new Date())} ${new Date().getDate()}, ${String(new Date().getFullYear()).substring(2)}`});
+            addWholeSalerAccordion(data, { ...orderData, "_id": uuid, "brandsku": `${orderData["sku"]}-${filteredBrand[0]["sku"]}`, "ordered_date": `${getMonthName( new Date())} ${new Date().getDate()}, ${String(new Date().getFullYear()).substring(2)}` }, currentSku);
         } else {
             let getIds = window.dataStore["new_orders"]["orders"].map(nwo => nwo["_id"]);
             if(requestType === "from-checkout") {
@@ -1019,7 +1134,7 @@ function addnewOrder(data, currentSku) {
                 <div class="accordion-item-body parent opened orderbrandselection">
                     <div class="accordion-item-body-content" style="max-height: 270px; overflow-y: auto;">
                         <div class="date-picker-value" id="dpicker-${data["_id"]}" _id=${data["_id"]}>
-                            ${showDatePicker()}
+                            ${showDatePicker(`dpicker-${data["_id"]}`)}
                         </div>
                         <table class="accordian table">
                             <tbody id="new_order_body" skudata=${data["sku"]}>
@@ -1038,7 +1153,7 @@ function addnewOrder(data, currentSku) {
     const minDate = `${getMonthName( new Date(startDate))} ${new Date(startDate).getDate()}, ${String(new Date(startDate).getFullYear()).substring(2)}`;
     const maxDate = `${getMonthName( new Date(endDate))} ${new Date(endDate).getDate()}, ${String(new Date(endDate).getFullYear()).substring(2)}`;
     /* Disable current date selection by default */
-    $(`#dpicker-${data["_id"]} input[id$=tbDate]`).datepicker({ 
+    $(`#tbDate-dpicker-${data["_id"]}`).datepicker({ 
         dateFormat: 'M dd, y', 
         minDate: minDate, 
         maxDate: maxDate,
@@ -1076,7 +1191,7 @@ function addnewOrder(data, currentSku) {
     }
     );
     if(data["ordered_date"]) {
-        $(`#dpicker-${data["_id"]} input[id$=tbDate]`).datepicker("setDate", data["ordered_date"]);
+        $(`#tbDate-dpicker-${data["_id"]}`).datepicker("setDate", data["ordered_date"]);
     }
 
     $(".swapWholesalerAccount").click(function (e) {
@@ -1420,7 +1535,7 @@ function addnewOrderBrand(data, currentSku, skulevel) {
                 <div class="accordion-item-body parent opened orderbrandselection">
                     <div class="accordion-item-body-content" style="max-height: 270px; overflow-y: auto;">
                         <div class="date-picker-value" id="dpicker-${data["_id"]}" _id=${data["_id"]} style="margin-top: -6px;">
-                            ${showDatePicker()}
+                            ${showDatePicker(`dpicker-${data["_id"]}`)}
                         </div>
                         
                         <table class="accordian table">
@@ -1440,7 +1555,7 @@ function addnewOrderBrand(data, currentSku, skulevel) {
     const minDate = `${getMonthName( new Date(startDate))} ${new Date(startDate).getDate()}, ${String(new Date(startDate).getFullYear()).substring(2)}`;
     const maxDate = `${getMonthName( new Date(endDate))} ${new Date(endDate).getDate()}, ${String(new Date(endDate).getFullYear()).substring(2)}`;
     /* Disable current date selection by default */
-    $(`#dpicker-${data["_id"]} input[id$=tbDate]`).datepicker({ 
+    $(`#tbDate-dpicker-${data["_id"]}`).datepicker({ 
         dateFormat: 'M dd, y', 
         minDate: minDate, 
         maxDate: maxDate,
@@ -1478,7 +1593,7 @@ function addnewOrderBrand(data, currentSku, skulevel) {
     }
     );
     if(data["ordered_date"]) {
-        $(`#dpicker-${data["_id"]} input[id$=tbDate]`).datepicker("setDate", data["ordered_date"]);
+        $(`#tbDate-dpicker-${data["_id"]}`).datepicker("setDate", data["ordered_date"]);
     }
 
     $(".swapWholesalerAccount").click(function (e) {

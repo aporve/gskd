@@ -250,7 +250,7 @@ svg {
     }
 }
 
-input[id$="tbDate"] {
+input.dateSelectPicker {
     border: none;
     background: transparent;
     outline: 0;
