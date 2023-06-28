@@ -309,6 +309,9 @@ function ToApp(eventName, data, orgData) {
         case "cancelorderon-bot":
             cancelOrder();
             break;
+case "legal-copyright":
+            addLegalCopyright(data);
+            break;
         default:
             break;
     }

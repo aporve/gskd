@@ -5,6 +5,7 @@ function loadUserWelcomeUI(data) {
     let locale = localStoredData["locale"];
 
     $(".header").removeClass('hide');
+    $("#bodyContent").addClass("order_welcome");
     $("#content_box").empty();
 
 
@@ -80,6 +81,9 @@ function loadUserWelcomeUI(data) {
         $("#last_order_history").append(`
             <div class="order_card last_order" data=${encodeURIComponent(JSON.stringify(lastOrder))} skudata="${lastOrder['sku']}" date="${lastOrder['ordered_date']}" orderid=${lastOrder["order_no"]}>
                 <div class="title backbtn hide">
+                    <div class="title inner" style="padding-left: 0; margin-bottom:0;">
+                        <div class="name highlight">${lastOrder["account_no"]}</div>
+                    </div>
                     <div class="arrow name flex back_button" style="font-weight: 400; font-size: 14px; color: #151515;">
                         <img src="/gskd/assets/images/svg/right.svg" style="transform: rotate(180deg);" />
                         <span style="margin-left: 5px;">${locale["buttons"]["back"]}</span>
@@ -89,7 +93,7 @@ function loadUserWelcomeUI(data) {
                     </div>
                 </div>
                 <div class="card_click" data=${encodeURIComponent(JSON.stringify(lastOrder))} skudata="${lastOrder['sku']}" date="${lastOrder['ordered_date']}" orderid=${lastOrder["order_no"]}>
-                    <div class="title">
+                    <div class="title outer">
                         <div class="name highlight">${lastOrder["account_no"]}</div>
                         <div class="arrow">
                             <img src="/gskd/assets/images/svg/right.svg" />
@@ -109,8 +113,8 @@ function loadUserWelcomeUI(data) {
                             <div class="info"><span class="light-colored">${locale["labels"]["statusDate"]}:</span> <span class="bold">${lastOrder["delivery_date"]}</span></div>
                         </div>
                         <div class="order_on_date">
-                            <div class="info">${locale["labels"]["orderedOn"]}:</div>
-                            <div class="info">${lastOrder["ordered_date"]}</div>
+                            <div class="info"><span class="light-colored">${locale["labels"]["orderedOn"]}:</span></div>
+                            <div class="info textAlignRight">${lastOrder["ordered_date"]}</div>
                         </div>
                     </div>
                 </div>
@@ -119,10 +123,10 @@ function loadUserWelcomeUI(data) {
                         <div class="name">${locale["labels"]["orderDetails"]}</div>
                     </div>
                     <div class="detail">
-                        <table class="ui very basic table" skudata=${lastOrder["sku"]} date="${lastOrder["ordered_date"]}" orderid=${lastOrder["order_no"]}>
+                        <table class="ui very basic table" style="width: 100%;" skudata=${lastOrder["sku"]} date="${lastOrder["ordered_date"]}" orderid=${lastOrder["order_no"]}>
                             <thead>
                                 <tr class="info_row">
-                                    <td class="info_data" colspan="1">${locale["labels"]["estPrice"]}</td>
+                                    <td class="info_data" colspan="2">${locale["labels"]["estPrice"]}</td>
                                     <td class="info_data" colspan="1">${locale["labels"]["units"]}</td>
                                     <td class="info_data" colspan="1">${locale["labels"]["freeGoods"]}</td>
                                     <td class="info_data" colspan="1">${Boolean(lastOrder["on_invoice"]) ? "On Invoice Discount" : "Off Invoice Discount"}</td>
@@ -131,6 +135,7 @@ function loadUserWelcomeUI(data) {
                             </thead>
                             <tbody id="order_card_tablebody"></tbody>
                         </table>
+                        
                     </div>
                 </div>
             </div>
@@ -154,6 +159,7 @@ function loadUserWelcomeUI(data) {
             $(this).parent().addClass("hide");
             siblingElement.siblings(".card_click")
             $("#progress_plan_main").removeClass("hide");
+            siblingElement.siblings(".card_click").children(".title.outer").removeClass("hide");
             siblingElement.siblings(".card_click").css("pointer-events", "unset");
         });
 
@@ -230,6 +236,7 @@ function loadUserWelcomeUI(data) {
                 if (childElement.hasClass("hide")) {
                     childElement.removeClass("hide");
                     $("#progress_plan_main").addClass("hide");
+                    $(this).children(".title.outer").addClass("hide");
                     $(this).siblings(".title.backbtn").removeClass("hide");
                     getTableBodyChildElement.empty();
                     additionalDetails && additionalDetails.map((item, index) => {
@@ -281,6 +288,13 @@ function loadUserWelcomeUI(data) {
                         let getElement = $(this).parent().parent().parent().siblings(`.info_row.key${index}`).children(".editable");
                         let getElementValue = $(getElement).children().val();
                         let getElementPrevValue = getElement.attr("prev-value");
+                        if(!(/^[0-9][0-9]*$/.test(Number(getElementValue)))) {
+                            $(getElement).children().val(0);
+                            $(getElement).children().change();
+                            $(getElement).removeClass("active");
+                            $(getElement).children().attr("disabled", true);
+                            return;
+                        } 
                         $(getElement).removeClass("active");
                         $(getElement).children().attr("disabled", true);
                         let value = $(getElement).children().val();
@@ -392,6 +406,13 @@ function loadUserWelcomeUI(data) {
                         let getElement = $(this).parent().parent().parent().siblings(`.info_row.key${index}`).children(".editable");
                         let getElementValue = $(getElement).children().val();
                         let getElementPrevValue = getElement.attr("prev-value");
+                        if(!(/^[0-9][0-9]*$/.test(Number(getElementValue)))) {
+                            $(getElement).children().val(0);
+                            $(getElement).children().change();
+                            $(getElement).removeClass("active");
+                            $(getElement).children().attr("disabled", true);
+                            return;
+                        } 
                         $(getElement).removeClass("active");
                         $(getElement).children().attr("disabled", true);
                         let value = $(getElement).children().val();
@@ -492,7 +513,7 @@ function loadBrandSelectionUI(data) {
     }); */
 
     // let total = calculateSumAmount(window.cartData);
-
+    
     let parseData = getParsedData();
     let total = 0;
     parseData && parseData?.["new_orders"] && parseData?.["new_orders"]?.["orders"] && parseData?.["new_orders"]?.["orders"].map((ordr, index) => {

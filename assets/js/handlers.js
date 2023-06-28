@@ -15,11 +15,22 @@ function showSkuLevelDetailsBrand(data, currentSku, requestType, requestSku) {
                 <div class="icon"><i class="fa fa-shopping-cart"></i></div>
             </div>
             <div class="sub_detail_wrapper">
-                <div class="sub_detail"><strong>${locale["labels"]["start"]}:</strong> ${data["start_date"]} <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <strong>${locale["labels"]["end"]}:</strong> ${data["last_date"]}</div>
+                <div class="sub_detail"><strong>${locale["labels"]["start"]}:</strong> ${data["start_date"]} <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> </div>
+                <div class="sub_detail"><strong>${locale["labels"]["end"]}:</strong> ${data["last_date"]}</div>
                 <div class="sub_detail highlight">${isAdditionDiscountEligible ? locale["labels"]["additionalDiscount"] : ""}</div>
             </div>
             
+            <div class="brandprogresscontainer skulevel">
+                <div class="confettibgContainer">
+                    <div class="confettibgWrapper">
+                        <div class="confetti left"></div>
+                        <div class="confetti right"></div>
+                    </div>
+                </div>
             <div class="new_orders"></div>
+                <div class="reward_snackbar"></div>
+            </div>
+            <!-- <div class="new_orders"></div> -->
 
             <div class="place_order">
                 <button class="btn outline" id="addanotheraccount" data=${encodeURIComponent(JSON.stringify(data))}>${locale["buttons"]["addAnotherAccount"]}</button>
@@ -346,7 +357,7 @@ function showSkuLevelDetailsBrand(data, currentSku, requestType, requestSku) {
         let testtemp = [];
         window.wholesalerAccountData && window.wholesalerAccountData.length > 0 && window.wholesalerAccountData.map(whdata => {
             if(whdata["ordered_date"]) {
-                testtemp.push(new Date(whdata["ordered_date"]).toLocaleDateString());
+                testtemp.push(new Date(whdata["ordered_date"]).toLocaleDateString("en-GB"));
             }
         });
 
@@ -367,7 +378,7 @@ function showSkuLevelDetailsBrand(data, currentSku, requestType, requestSku) {
            var dateArray = new Array();
            var currentDate = startDate;
            while (currentDate <= stopDate) {
-             dateArray.push(new Date(currentDate).toLocaleDateString())
+             dateArray.push(new Date(currentDate).toLocaleDateString("en-GB"))
              currentDate = currentDate.addDays(1);
            }
            return dateArray;
@@ -536,10 +547,20 @@ function showBrandLevelDetails(data, currentSku, requestType, requestSku) {
                 <div class="icon"><i class="fa fa-shopping-cart"></i></div>
             </div>
             <div class="sub_detail_wrapper">
-                <div class="sub_detail"><strong>${locale["labels"]["start"]}:</strong> ${data["start_date"]} <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <strong>${locale["labels"]["end"]}:</strong> ${data["last_date"]}</div>
+                <div class="sub_detail"><strong>${locale["labels"]["start"]}:</strong> ${data["start_date"]}</div>
+                <div class="sub_detail"><strong>${locale["labels"]["end"]}:</strong> ${data["last_date"]}</div>
                 <div class="sub_detail highlight">${isAdditionDiscountEligible ? locale["labels"]["additionalDiscount"] : ""}</div>
             </div>
+            <div class="brandprogresscontainer">
+                <div class="confettibgContainer">
+                    <div class="confettibgWrapper">
+                        <div class="confetti left"></div>
+                        <div class="confetti right"></div>
+                    </div>
+                </div>
             <div class="brand_level_progress">${loadProgressCards({ "brands": filteredBrand }, true, true)}</div>
+                <div class="reward_snackbar"></div>
+            </div>
             <div class="new_orders"></div>
 
             <div class="place_order">
@@ -845,7 +866,7 @@ function showBrandLevelDetails(data, currentSku, requestType, requestSku) {
         let testtemp = [];
         window.wholesalerAccountData && window.wholesalerAccountData.length > 0 && window.wholesalerAccountData.map(whdata => {
             if(whdata["ordered_date"]) {
-                testtemp.push(new Date(whdata["ordered_date"]).toLocaleDateString());
+                testtemp.push(new Date(whdata["ordered_date"]).toLocaleDateString("en-GB"));
             }
         });
 
@@ -866,7 +887,7 @@ function showBrandLevelDetails(data, currentSku, requestType, requestSku) {
            var dateArray = new Array();
            var currentDate = startDate;
            while (currentDate <= stopDate) {
-             dateArray.push(new Date(currentDate).toLocaleDateString())
+             dateArray.push(new Date(currentDate).toLocaleDateString("en-GB"))
              currentDate = currentDate.addDays(1);
            }
            return dateArray;
@@ -1434,8 +1455,8 @@ function addnewOrder(data, currentSku) {
         if(productData["brand"] === currentSku) {
             $("#new_order_body").append(`
                 <tr class="info_row">
-                    <td class="info_data" style="vertical-align: middle; padding: 8px 0 0 0;">${productData["name"]}</td>
-                    <td class="info_data" style="vertical-align: middle; padding: 8px 0 0 0;">
+                    <td class="info_data" style="vertical-align: middle; padding: 2px 0 0 0;">${productData["name"]}</td>
+                    <td class="info_data" style="vertical-align: middle; padding: 2px 0 0 0;">
                         <div class="counter__wrapper">
                             <div class="counter__container" skudata="${productData["sku"]}" parentskudata=${data["sku"]} _id=${data["_id"]}>
                                 <div class="counter__box__container sub">
