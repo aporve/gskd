@@ -281,6 +281,13 @@ function loadUserWelcomeUI(data) {
                         let getElement = $(this).parent().parent().parent().siblings(`.info_row.key${index}`).children(".editable");
                         let getElementValue = $(getElement).children().val();
                         let getElementPrevValue = getElement.attr("prev-value");
+                        if(!(/^[0-9][0-9]*$/.test(Number(getElementValue)))) {
+                            $(getElement).children().val(0);
+                            $(getElement).children().change();
+                            $(getElement).removeClass("active");
+                            $(getElement).children().attr("disabled", true);
+                            return;
+                        } 
                         $(getElement).removeClass("active");
                         $(getElement).children().attr("disabled", true);
                         let value = $(getElement).children().val();
@@ -392,6 +399,13 @@ function loadUserWelcomeUI(data) {
                         let getElement = $(this).parent().parent().parent().siblings(`.info_row.key${index}`).children(".editable");
                         let getElementValue = $(getElement).children().val();
                         let getElementPrevValue = getElement.attr("prev-value");
+                        if(!(/^[0-9][0-9]*$/.test(Number(getElementValue)))) {
+                            $(getElement).children().val(0);
+                            $(getElement).children().change();
+                            $(getElement).removeClass("active");
+                            $(getElement).children().attr("disabled", true);
+                            return;
+                        } 
                         $(getElement).removeClass("active");
                         $(getElement).children().attr("disabled", true);
                         let value = $(getElement).children().val();
