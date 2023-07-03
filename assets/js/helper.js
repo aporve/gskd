@@ -307,25 +307,16 @@ function getJoinedCheckout (data) {
     return finalCartData;
 }
 
-function downloadFile(url, fileName) {
-    var req = new XMLHttpRequest();
-    req.open("GET", url, true);
-    req.responseType = "blob";
-    req.onload = function () {
-        var blob = new Blob([req.response], { type: "application/octetstream" });
-        var isIE = false || !!document.documentMode;
-        if (isIE) {
-            window.navigator.msSaveBlob(blob, fileName);
-        } else {
-            var url = window.URL || window.webkitURL;
-            link = url.createObjectURL(blob);
-            var a = document.createElement("a");
-            a.setAttribute("download", fileName);
-            a.setAttribute("href", link);
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-    };
-    req.send();
+function downloadFile(url, file) {
+    fetch(url, { method: 'get', mode: 'no-cors', referrerPolicy: 'no-referrer' })
+        .then(res => res.blob())
+        .then(res => {
+            const elem = document.createElement('a');
+            elem.setAttribute('download', file);
+            const href = URL.createObjectURL(res);
+            elem.href = href;
+            elem.setAttribute('target', '_blank');
+            elem.click();
+            URL.revokeObjectURL(href);
+        });
 };

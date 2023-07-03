@@ -59,7 +59,7 @@ function loadUserProfile(data) {
         let accordionItemBody = $(this).siblings(".accordion-item-body");
         if (!$(this).hasClass("active")) {
             $(this).addClass("active");
-            if (textContent === locale["labels"]["profileDetails"]) {
+            if (textContent === "Profile Details" || textContent === "Detalhes de perfil") {
                 let bodyContentNode = $(accordionItemBody).children(".accordion-item-body-content");
                 bodyContentNode.empty();
                 bodyContentNode.append(`
@@ -82,7 +82,7 @@ function loadUserProfile(data) {
                 `);
                 ToBot("profile-details", {});
             }
-            if (textContent === locale["labels"]["associatedAccounts"]) {
+            if (textContent === "Associated Accounts" || textContent === "contas associadas") {
                 let bodyContentNode = $(accordionItemBody).children(".accordion-item-body-content");
                 bodyContentNode.empty();
                 bodyContentNode.append(`
@@ -128,7 +128,6 @@ function loadUserProfile(data) {
                 $(".accordion-item-header.inner").click(function (e) {
                     e.stopPropagation();
                     e.stopImmediatePropagation();
-                    console.log("first", locale["labels"]["accountNumber"])
                     let scrollHeightAccordionInner = "";
                     let currentElementData = $(this).attr("data");
                     let parsedCurrentElementData = JSON.parse(decodeURIComponent(currentElementData));
@@ -141,9 +140,9 @@ function loadUserProfile(data) {
                             <table class="accordian table">
                                 <thead>
                                     <tr class="info_row bordered">
-                                        <td class="info_data title" colspan="4">${locale["labels"]["accountNumber"]}</td>
-                                        <td class="info_data title" colspan="2">${locale["labels"]["legalId"]}</td>
-                                        <td class="info_data title" colspan="1">${locale["labels"]["attachInvoice"]}</td>
+                                        <td class="info_data title" colspan="4">Account <br/>Number</td>
+                                        <td class="info_data title" colspan="2">Legal <br/>ID</td>
+                                        <td class="info_data title" colspan="1">Download <br/>Invoice</td>
                                     </tr>
                                 </thead>
                                 <tbody class="accordian_account_detailed">
@@ -200,9 +199,7 @@ function loadUserProfile(data) {
                         $(".upload_icon").click(function (e) {
                             e.stopPropagation();
                             e.stopImmediatePropagation();
-                            window.open($(this).attr("uri"));
-                            /* console.log("first", $(this).attr("uri"));
-                            downloadFile($(this).attr("uri"), 'invoice.pdf'); */
+                            downloadFile($(this).attr("uri"), 'invoice.pdf');
                         });
                         scrollHeightAccordionInner = accordionItemBodyInner.prop('scrollHeight') + "px";
                         accordionItemBodyInner.css("maxHeight", scrollHeightAccordionInner);
@@ -214,10 +211,10 @@ function loadUserProfile(data) {
                 });
                 ToBot("associated-accounts", {});
             }
-            if (textContent === locale["labels"]["notification"]) {
+            if (textContent === "Preferences" || textContent === "Preferências") {
                 let bodyContentNode = $(accordionItemBody).children(".accordion-item-body-content");
                 $(this).addClass("notification");
-                if(notification == "yes") {
+                if (notification == "yes") {
                     $(this).addClass("notification_success");
                 } else {
                     $(this).addClass("notification_failed");
