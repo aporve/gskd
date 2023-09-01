@@ -38,6 +38,7 @@ function loadUserProfile(data) {
             </div>
         </div>
 
+        <!--
         <div class="accordion">
             <div class="accordion-item">
                 <div class="accordion-item-header parent">${locale["labels"]["notification"]}</div>
@@ -48,6 +49,8 @@ function loadUserProfile(data) {
                 </div>
             </div>
         </div>
+        -->
+        
         </div>
     `);
 
