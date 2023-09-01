@@ -61,6 +61,7 @@
     color: #E5E5E5;
     background-color: #959595;
     padding: 15px 20px;
+    visibility: hidden;
 }
 
 .legal_tnc .legal_tnc_title {
@@ -79,7 +80,8 @@
 }
 
 .legal_tnc .legal_tnc_body a {
-    color: #0000EE;;
+    color: #0000EE;
+    ;
     text-decoration: underline;
 }
 
